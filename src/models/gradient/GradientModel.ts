@@ -1,9 +1,9 @@
-import { ColorModel } from "@/models/color/ColorModel"
+import { ColorModel } from '@/models/color/ColorModel';
 
 type GradientStep = {
     color: ColorModel;
     location: number;
-}
+};
 
 export class GradientModel {
     /** Internal representation of the gradient sequence */
@@ -11,12 +11,7 @@ export class GradientModel {
 
     /** Returns a gradient model with a complementary color */
     public static fromComplementary(model: ColorModel) {
-        return new GradientModel(
-            [
-                model,
-                ColorModel.complementary(model)
-            ]
-        );
+        return new GradientModel([model, ColorModel.complementary(model)]);
     }
 
     /** Returns a gradient model with triad colors */
@@ -43,7 +38,7 @@ export class GradientModel {
     public static fromSquare(model: ColorModel) {
         return new GradientModel(ColorModel.square(model));
     }
-    
+
     constructor(colors: ColorModel[]);
     constructor(steps: GradientStep[]);
     constructor(colorsOrSteps: GradientStep[] | ColorModel[]) {
