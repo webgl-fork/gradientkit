@@ -11,9 +11,6 @@
         "skipLibCheck": true,
         "declaration": true,
         "baseUrl": ".",
-        "paths": {
-            "@/*": ["./src/*"]
-        },
     },
     "include": ["./src"],
     "exclude": ["./src/**/*.test.ts"]

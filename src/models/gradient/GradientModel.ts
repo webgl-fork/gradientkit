@@ -1,4 +1,4 @@
-import { ColorModel } from '@/models/color/ColorModel';
+import { ColorModel } from '../color/ColorModel';
 
 type GradientStep = {
     color: ColorModel;
@@ -44,12 +44,15 @@ export class GradientModel {
     constructor(colorsOrSteps: GradientStep[] | ColorModel[]) {
         for (const [index, colorOrStep] of colorsOrSteps.entries()) {
             if (colorOrStep instanceof ColorModel) {
-                this._steps.push({
-                    color: colorOrStep,
-                    location: index / (colorsOrSteps.length - 1)
-                });
+                this.steps = [
+                    ...this.steps,
+                    {
+                        color: colorOrStep,
+                        location: index / (colorsOrSteps.length - 1)
+                    }
+                ];
             } else {
-                this._steps.push(colorOrStep);
+                this.steps = [...this.steps, colorOrStep];
             }
         }
     }
@@ -71,6 +74,7 @@ export class LinearGradientModel extends GradientModel {
 
     constructor(angle: number, steps: GradientStep[]) {
         super(steps);
+
         this.angle = angle;
     }
 }
@@ -87,6 +91,7 @@ export class RadialGradientModel extends GradientModel {
 
     constructor(x: number, y: number, radius: number, steps: GradientStep[]) {
         super(steps);
+
         this.x = x;
         this.y = y;
         this.radius = radius;
