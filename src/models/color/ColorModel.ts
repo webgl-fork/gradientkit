@@ -47,11 +47,16 @@ export class ColorModel {
         return [model.clone(), model.clone().rotate(90), model.clone().rotate(180), model.clone().rotate(270)];
     }
 
-    constructor(color: HSLModel, alpha = 1) {
-        this.setHue(color.hue);
-        this.setSaturation(color.saturation);
-        this.setLightness(color.lightness);
-        this.setAlpha(alpha);
+    constructor(color?: HSLModel, alpha?: number) {
+        if (color) {
+            this.setHue(color.hue);
+            this.setSaturation(color.saturation);
+            this.setLightness(color.lightness);
+        }
+
+        if (alpha) {
+            this.setAlpha(alpha);
+        }
     }
 
     /** Returns the Hue */

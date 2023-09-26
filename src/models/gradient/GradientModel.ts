@@ -1,17 +1,19 @@
 import { ColorModel } from '../color/ColorModel';
 
-type GradientStop = {
+export type GradientStop = {
     color: ColorModel;
     location: number;
 };
+
+export type GradientModelParams = GradientStop[] | ColorModel[];
 
 export class GradientModel {
     /** Internal representation of the gradient sequence */
     private _stops: GradientStop[] = [];
 
     constructor(colors: ColorModel[]);
-    constructor(steps: GradientStop[]);
-    constructor(colorsOrStops: GradientStop[] | ColorModel[]) {
+    constructor(stops: GradientStop[]);
+    constructor(colorsOrStops: GradientModelParams) {
         this.stops = colorsOrStops;
     }
 
@@ -89,6 +91,11 @@ export class GradientModel {
         this.stops = ColorModel.square(model);
 
         return this;
+    }
+
+    /** Formats the Gradient */
+    public format(formatter: (gradient: this) => string) {
+        return formatter(this);
     }
 }
 
@@ -184,11 +191,6 @@ export class LinearGradientModel extends GradientModel {
         this.startPoint.y += dy;
         this.endPoint.x += dx;
         this.endPoint.y += dy;
-    }
-
-    /** Formats the Gradient */
-    public format(formatter: (gradient: LinearGradientModel) => string) {
-        return formatter(this);
     }
 }
 
