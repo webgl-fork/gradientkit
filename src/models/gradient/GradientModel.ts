@@ -92,11 +92,6 @@ export class GradientModel {
 
         return this;
     }
-
-    /** Formats the Gradient */
-    public format(formatter: (gradient: this) => string) {
-        return formatter(this);
-    }
 }
 
 type Point = { x: number; y: number };

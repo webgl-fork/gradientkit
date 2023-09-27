@@ -180,11 +180,6 @@ export class ColorModel {
         return ColorModel.square(this);
     }
 
-    /** Formats the model into a given format */
-    public format(formatter: (model: ColorModel) => string) {
-        return formatter(this);
-    }
-
     /** Returns model as array */
     public asArray(): [number, number, number, number] {
         return [this.luminance, this.chroma, this.hue, this.alpha];
