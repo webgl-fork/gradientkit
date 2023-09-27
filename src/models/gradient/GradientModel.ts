@@ -192,6 +192,17 @@ export class LinearGradientModel extends GradientModel {
         this.endPoint.x += dx;
         this.endPoint.y += dy;
     }
+
+    /** Returns gradient as CSS string */
+    public css() {
+        const steps = this.stops
+            .map(({ color, location }) => {
+                return `${color.css()} ${location * 100}%`;
+            })
+            .join(', ');
+
+        return `linear-gradient(${this.angle}deg, ${steps});`;
+    }
 }
 
 export class RadialGradientModel extends GradientModel {

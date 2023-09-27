@@ -1,11 +1,10 @@
 import { GradientModel, LinearGradientModel } from './GradientModel';
-import { CSS } from '../../formatters/css/css';
 import { ColorModel } from '../color/ColorModel';
 
 describe('GradientModel', () => {
     it('should create a gradient model with color models', () => {
-        const color1 = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
-        const color2 = new ColorModel({ hue: 120, saturation: 50, lightness: 50 });
+        const color1 = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
+        const color2 = new ColorModel({ hue: 120, chroma: 50, luminance: 50 });
         const gradient = new GradientModel([color1, color2]);
         expect(gradient.stops.length).toBe(2);
         expect(gradient.stops[0].color).toBe(color1);
@@ -15,8 +14,8 @@ describe('GradientModel', () => {
     });
 
     it('should create a gradient model with gradient stops', () => {
-        const step1 = { color: new ColorModel({ hue: 0, saturation: 50, lightness: 50 }), location: 0 };
-        const step2 = { color: new ColorModel({ hue: 120, saturation: 50, lightness: 50 }), location: 1 };
+        const step1 = { color: new ColorModel({ hue: 0, chroma: 50, luminance: 50 }), location: 0 };
+        const step2 = { color: new ColorModel({ hue: 120, chroma: 50, luminance: 50 }), location: 1 };
         const gradient = new GradientModel([step1, step2]);
         expect(gradient.stops.length).toBe(2);
         expect(gradient.stops[0]).toBe(step1);
@@ -24,8 +23,8 @@ describe('GradientModel', () => {
     });
 
     it('should sort gradient stops by location', () => {
-        const step1 = { color: new ColorModel({ hue: 0, saturation: 50, lightness: 50 }), location: 1 };
-        const step2 = { color: new ColorModel({ hue: 120, saturation: 50, lightness: 50 }), location: 0 };
+        const step1 = { color: new ColorModel({ hue: 0, chroma: 50, luminance: 50 }), location: 1 };
+        const step2 = { color: new ColorModel({ hue: 120, chroma: 50, luminance: 50 }), location: 0 };
         const gradient = new GradientModel([step1, step2]);
         expect(gradient.stops.length).toBe(2);
         expect(gradient.stops[0]).toBe(step2);
@@ -34,7 +33,7 @@ describe('GradientModel', () => {
 
     describe('fromComplementary', () => {
         it('should create a gradient model with complementary colors', () => {
-            const color = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
+            const color = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
             const gradient = new GradientModel([]).fromComplementary(color);
             expect(gradient.stops.length).toBe(2);
             expect(gradient.stops[0].color).toBe(color);
@@ -46,7 +45,7 @@ describe('GradientModel', () => {
 
     describe('fromTriad', () => {
         it('should create a gradient model with triad colors', () => {
-            const color = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
+            const color = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
             const gradient = new GradientModel([]).fromTriad(color);
             expect(gradient.stops.length).toBe(3);
             expect(gradient.stops[0].color).toStrictEqual(color);
@@ -60,7 +59,7 @@ describe('GradientModel', () => {
 
     describe('fromAnalogous', () => {
         it('should create a gradient model with analogous colors', () => {
-            const color = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
+            const color = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
             const gradient = new GradientModel([]).fromAnalogous(color);
             expect(gradient.stops.length).toBe(3);
             expect(gradient.stops[0].color).toEqual(ColorModel.analogous(color)[0]);
@@ -74,7 +73,7 @@ describe('GradientModel', () => {
 
     describe('fromSplitComplementary', () => {
         it('should create a gradient model with split complementary colors', () => {
-            const color = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
+            const color = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
             const gradient = new GradientModel([]).fromSplitComplementary(color);
             expect(gradient.stops.length).toBe(3);
             expect(gradient.stops[0].color).toStrictEqual(color);
@@ -88,7 +87,7 @@ describe('GradientModel', () => {
 
     describe('fromTetradic', () => {
         it('should create a gradient model with tetradic colors', () => {
-            const color = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
+            const color = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
             const gradient = new GradientModel([]).fromTetradic(color);
             expect(gradient.stops.length).toBe(4);
             expect(gradient.stops[0].color).toStrictEqual(color);
@@ -104,7 +103,7 @@ describe('GradientModel', () => {
 
     describe('fromSquare', () => {
         it('should create a gradient model with square colors', () => {
-            const color = new ColorModel({ hue: 0, saturation: 50, lightness: 50 });
+            const color = new ColorModel({ hue: 0, chroma: 50, luminance: 50 });
             const gradient = new GradientModel([]).fromSquare(color);
             expect(gradient.stops.length).toBe(4);
             expect(gradient.stops[0].color).toStrictEqual(color);
@@ -120,11 +119,11 @@ describe('GradientModel', () => {
 
     it('should format the gradient using the provided formatter', () => {
         const gradient = new LinearGradientModel(15, { x: 0, y: 0 }, { x: 500, y: 0 }, []).fromAnalogous(
-            new ColorModel({ hue: 0, saturation: 100, lightness: 100 })
+            new ColorModel({ hue: 0, chroma: 100, luminance: 100 })
         );
 
-        expect(gradient.format(CSS.linearGradient)).toEqual(
-            'linear-gradient(15deg, hsl(330, 100%, 100%) 0%, hsl(0, 100%, 100%) 50%, hsl(30, 100%, 100%) 100%);'
+        expect(gradient.css()).toEqual(
+            'linear-gradient(15deg, lch(100% 100 330 / 1) 0%, lch(100% 100 0 / 1) 50%, lch(100% 100 30 / 1) 100%);'
         );
     });
 });

@@ -15,6 +15,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/color-convert": "^2.0.1",
     "@types/jest": "^29.5.4",
     "@types/node": "^20.6.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
@@ -37,6 +38,7 @@
     "access": "public"
   },
   "dependencies": {
+    "color-convert": "^2.0.1",
     "twgl.js": "^5.5.3"
   }
 }
