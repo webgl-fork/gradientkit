@@ -6,15 +6,15 @@ type RGBModel = {
     blue: number;
 };
 
-type HCLModel = {
-    hue: number;
-    chroma: number;
+type LCHModel = {
     luminance: number;
+    chroma: number;
+    hue: number;
 };
 
 export class ColorModel {
     /** Internal Color Model */
-    private color: HCLModel = { hue: 0, chroma: 0, luminance: 0 };
+    private color: LCHModel = { luminance: 0, chroma: 0, hue: 0 };
 
     /** Alpha channel */
     private _alpha = 1;
@@ -49,16 +49,46 @@ export class ColorModel {
         return [model.clone(), model.clone().rotate(90), model.clone().rotate(180), model.clone().rotate(270)];
     }
 
-    constructor(color?: HCLModel, alpha?: number) {
+    constructor(color?: LCHModel, alpha?: number) {
         if (color) {
-            this.setHue(color.hue);
-            this.setChroma(color.chroma);
             this.setLuminance(color.luminance);
+            this.setChroma(color.chroma);
+            this.setHue(color.hue);
         }
 
         if (alpha) {
             this.setAlpha(alpha);
         }
+    }
+
+    /** Returns the Luminance */
+    get luminance(): number {
+        return this.color.luminance;
+    }
+
+    /** Sets the Luminance */
+    set luminance(luminance: number) {
+        this.setLuminance(luminance);
+    }
+
+    /** Sets the Lightness */
+    public setLuminance(luminance: number) {
+        this.color.luminance = Math.min(Math.max(luminance, 0), 100);
+    }
+
+    /** Returns the Chroma */
+    get chroma(): number {
+        return this.color.chroma;
+    }
+
+    /** Sets the Chroma */
+    set chroma(chroma: number) {
+        this.setChroma(chroma);
+    }
+
+    /** Sets the Chroma */
+    public setChroma(chroma: number) {
+        this.color.chroma = Math.min(Math.max(chroma, 0), 230);
     }
 
     /** Returns the Hue */
@@ -78,36 +108,6 @@ export class ColorModel {
         this.color.hue = Math.max(hue, 0) % 360;
     }
 
-    /** Returns the Chroma */
-    get chroma(): number {
-        return this.color.chroma;
-    }
-
-    /** Sets the Chroma */
-    set chroma(chroma: number) {
-        this.setChroma(chroma);
-    }
-
-    /** Sets the Chroma */
-    public setChroma(chroma: number) {
-        this.color.chroma = Math.min(Math.max(chroma, 0), 230);
-    }
-
-    /** Returns the Luminance */
-    get luminance(): number {
-        return this.color.luminance;
-    }
-
-    /** Sets the Luminance */
-    set luminance(luminance: number) {
-        this.setLuminance(luminance);
-    }
-
-    /** Sets the Lightness */
-    public setLuminance(luminance: number) {
-        this.color.luminance = Math.min(Math.max(luminance, 0), 100);
-    }
-
     /** Returns the Alpha channel */
     get alpha(): number {
         return this._alpha;
@@ -125,8 +125,10 @@ export class ColorModel {
 
     /** Returns the model as RGB */
     get rgb(): RGBModel {
+        const [l, c, h] = this.asArray();
+
         // eslint-disable-next-line import/no-named-as-default-member
-        const [red, green, blue] = convert.lch.rgb(this.asArray(true));
+        const [red, green, blue] = convert.lch.rgb([l, c, h]);
 
         return { red, green, blue };
     }
@@ -184,8 +186,8 @@ export class ColorModel {
     }
 
     /** Returns model as array */
-    public asArray(lch = false): [number, number, number] {
-        return lch ? [this.luminance, this.chroma, this.hue] : [this.hue, this.chroma, this.luminance];
+    public asArray(): [number, number, number, number] {
+        return [this.luminance, this.chroma, this.hue, this.alpha];
     }
 
     /** Returns model as CSS string */
